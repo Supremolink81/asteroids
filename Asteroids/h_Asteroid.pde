@@ -42,7 +42,12 @@ class Asteroid extends GameObject {
             myObjects.add(new Asteroid(size/2,new PVector(loc.x,loc.y)));
             myObjects.add(new Asteroid(size/2,new PVector(loc.x,loc.y)));
           }
-        }
+        } 
+      } else if (obj instanceof Spaceship) {
+        float distance = dist(obj.loc.x,obj.loc.y,loc.x,loc.y);
+        if (distance <= obj.size/2 + size/2) {
+          distance = obj.size/2 + size/2;
+        } 
       } else i++;
     }
   }

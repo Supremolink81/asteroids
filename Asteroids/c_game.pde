@@ -5,4 +5,5 @@ void game() {
   myShip.show();
   myDisc.act();
   myDisc.show();
+  
 }

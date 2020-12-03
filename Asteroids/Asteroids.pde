@@ -6,6 +6,7 @@ color s1,s2,s3,s4,s5,s6;
 Spaceship myShip;
 Discy myDisc;
 ArrayList<GameObject> myObjects;
+String gameResult;
 
 final int MENU = 0;
 final int GAME = 1;
@@ -27,6 +28,13 @@ void setup() {
   myShip = new Spaceship();
   myDisc = new Discy();
   myObjects = new ArrayList<GameObject>();
+  gameResult = "";
+  
+  int j = 0;
+  while (j <= 10) {
+    myObjects.add(new Asteroid());
+    j++;
+  }
   
   s1 = 0;
   s2 = 0;
@@ -56,10 +64,16 @@ void draw() {
   while (i < myObjects.size()) {
     GameObject obj = myObjects.get(i);
     if (obj.lives > 0) {
-      obj.act();
-      obj.show();
+      if (mode == GAME) {
+        obj.act();
+        obj.show();
+      }
       i++;
     } else {
+      if (obj instanceof Spaceship) {
+        mode = GAMEOVER;
+        gameResult = "lost!";
+      }
       myObjects.remove(i);
     }
   }
