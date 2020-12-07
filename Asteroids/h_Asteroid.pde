@@ -10,14 +10,11 @@ class Asteroid extends GameObject {
 
   }
 
-  
-
-  Asteroid(float s,PVector loc) {
+  Asteroid(float s,PVector loc,PVector vel) {
 
     lives = 1;
     this.loc = loc;
-    vel = new PVector(0,1);
-    vel.rotate(radians(random(TWO_PI)));
+    this.vel = vel;
     this.size = s;
 
   }
@@ -38,9 +35,14 @@ class Asteroid extends GameObject {
         if (dist(obj.loc.x,obj.loc.y,loc.x,loc.y) <= obj.size/2 + size/2) {
           obj.lives = 0;
           lives = 0;
+          int j = 0;
+          while (j < 10) {
+            myObjects.add(new Particle(loc.copy(),new PVector(vel.x*2,vel.y*2)));
+            j++;
+          }
           if (size >= 25) {
-            myObjects.add(new Asteroid(size/2,new PVector(loc.x,loc.y)));
-            myObjects.add(new Asteroid(size/2,new PVector(loc.x,loc.y)));
+            myObjects.add(new Asteroid(size/2,new PVector(loc.x,loc.y),obj.vel.copy().rotate(radians(45))));
+            myObjects.add(new Asteroid(size/2,new PVector(loc.x,loc.y),obj.vel.copy().rotate(radians(-45))));
           }
         } 
       } else if (obj instanceof Spaceship) {
@@ -48,7 +50,7 @@ class Asteroid extends GameObject {
         if (distance <= obj.size/2 + size/2) {
           distance = obj.size/2 + size/2;
         } 
-      } else i++;
+      } i++;
     }
   }
 }

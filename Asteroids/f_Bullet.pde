@@ -7,13 +7,13 @@ class Bullet extends GameObject {
     vel = myShip.dir.copy();
     size = 5;
     lives = 1;
-    limit = 45;
+    limit = 90;
   }
 
   void act() {
 
     super.act();
-    vel.setMag(10);
+    vel.setMag(5);
     if (loc.x < 0 || loc.x > width || loc.y < 0 || loc.y > height) lives--;
     timer++;
     if (timer == limit) lives--;
@@ -29,9 +29,8 @@ class DiscyBullet extends GameObject {
 
     timer = 0;
     loc = myDisc.loc.copy();
-    aim = new PVector(myShip.loc.x-myDisc.loc.x,myShip.loc.y-myDisc.loc.y);
-    aim.setMag(20);
-    vel = new PVector(aim.x,aim.y);
+    vel = new PVector(myShip.loc.x-myDisc.loc.x,myShip.loc.y-myDisc.loc.y);
+    vel.setMag(2);
     size = 5;
     lives = 1;
     limit = 20;

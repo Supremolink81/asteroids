@@ -7,10 +7,11 @@ class Fire extends GameObject {
     loc = myShip.loc.copy();
     vel = myShip.vel.copy();
     vel.rotate(PI - random(-0.5,0.5));
-    vel.setMag(5);
-    size = random(2,8);
+    vel.setMag(2);
+    size = random(1,4);
     lives = 1;
     alpha = 255;
+    thrust = dist(loc.x,loc.y,myShip.loc.x,myShip.loc.y) * 3;
   }
   
   void act() {

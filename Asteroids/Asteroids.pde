@@ -1,3 +1,13 @@
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+import ddf.minim.effects.*;
+import ddf.minim.signals.*;
+import ddf.minim.spi.*;
+import ddf.minim.ugens.*;
+
+Minim minim;
+AudioPlayer intro,theme,shipShoot,discShoot,lose,victory;
+
 int mode;
 float cx;
 float cy;
@@ -7,6 +17,9 @@ Spaceship myShip;
 Discy myDisc;
 ArrayList<GameObject> myObjects;
 String gameResult;
+boolean ast;
+float counter;
+color c,r,g;
 
 final int MENU = 0;
 final int GAME = 1;
@@ -29,12 +42,32 @@ void setup() {
   myDisc = new Discy();
   myObjects = new ArrayList<GameObject>();
   gameResult = "";
+  ast = false;
+  c = 100;
+  r = 0;
+  g = 0;
+  counter = 0;
+  
+  minim = new Minim(this);
+  intro = minim.loadFile("Menu 1 Super Smash Bros Brawl Music Extended.mp3");
+  theme = minim.loadFile("Tony Igy - Astronomia (Official Video).mp3");
+  shipShoot = minim.loadFile("PEW Sound effect Gaming.mp3");
+  discShoot = minim.loadFile("Headshot - Sound Effect [Perfect Cut].mp3");
+  lose = minim.loadFile("Sonic For Hire Gamer intro.mp3");
+  victory = minim.loadFile("Scatman John - Ba Bo Bey.mp3");
   
   int j = 0;
-  while (j <= 10) {
+  while (j < 10) {
     myObjects.add(new Asteroid());
     j++;
   }
+  
+  //For functionality testing
+  /*int j = 0;
+  while (j < 1) {
+    myObjects.add(new Asteroid());
+    j++;
+  }*/
   
   s1 = 0;
   s2 = 0;
@@ -42,6 +75,15 @@ void setup() {
   s4 = 0;
   s5 = 0;
   s6 = 0;
+  
+  intro.pause();
+  intro.rewind();
+  theme.pause();
+  theme.rewind();
+  lose.pause();
+  lose.rewind();
+  victory.pause();
+  victory.rewind();
   
 }
 
@@ -60,24 +102,6 @@ void draw() {
   
   println(myObjects.size());
   
-  int i = 0;
-  while (i < myObjects.size()) {
-    GameObject obj = myObjects.get(i);
-    if (obj.lives > 0) {
-      if (mode == GAME) {
-        obj.act();
-        obj.show();
-      }
-      i++;
-    } else {
-      if (obj instanceof Spaceship) {
-        mode = GAMEOVER;
-        gameResult = "lost!";
-      }
-      myObjects.remove(i);
-    }
-  }
-  
 }
 
 void mouseClicked() {
@@ -86,13 +110,19 @@ void mouseClicked() {
     if (rectButton(200,100,width/2,height/1.5)) exit();
   }
   else if (mode == GAME) {
-    
+    mode = PAUSE;
   }
   else if (mode == PAUSE) {
     if (rectButton(200,100,width/2,height/2)) mode = GAME;
   }
   else if (mode == GAMEOVER) {
-    if (rectButton(200,100,width/2,height/2)) mode = MENU;
+    if (rectButton(200,100,width/2,height/2)) {
+      lose.pause();
+      lose.rewind();
+      victory.pause();
+      victory.rewind();
+      setup();
+    }
   }
 }
 
@@ -124,7 +154,7 @@ void textSet(float size,color c,float x,float y,String label) {
   text(label, x, y);
 }
 
-void button(String type,float w,float h,float x,float y,String label,boolean stroke,color bc,color s,color tc) {
+void button(String type,float w,float h,float x,float y,String label,boolean stroke,color bc,color s,color tc,float ts) {
   if (type == "Circle") {
     fill(bc);
     if (stroke) {
@@ -133,7 +163,7 @@ void button(String type,float w,float h,float x,float y,String label,boolean str
       noStroke();
     }
     ellipse(x, y, w, h);
-    textSet(w/2, tc, x, y, label);
+    textSet(ts, tc, x, y, label);
   } else if (type == "Rect") {
     fill(bc);
     if (stroke) {
@@ -142,6 +172,6 @@ void button(String type,float w,float h,float x,float y,String label,boolean str
       noStroke();
     }
     rect(x, y, w, h);
-    textSet((w+h)/4, tc, x, y, label);
+    textSet(ts, tc, x, y, label);
   }
 }
