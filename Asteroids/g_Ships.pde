@@ -1,6 +1,7 @@
 class Spaceship extends GameObject {
 
   PVector dir;
+  int lifeTimer,alpha;
 
   Spaceship() {
     
@@ -10,7 +11,8 @@ class Spaceship extends GameObject {
     lives = 3;
     timer = 0;
     limit = 35;
-    
+    lifeTimer = 0;
+    alpha = 255;
   }
 
  
@@ -19,6 +21,12 @@ class Spaceship extends GameObject {
 
     super.act();
     timer++;
+    if (lifeTimer > 0) {
+      alpha = 122;
+      lifeTimer--;
+    } else {
+      alpha = 255;
+    }
     if (a) dir.rotate(-radians(2));
     if (d) dir.rotate(radians(2));
     if (w) {
@@ -52,7 +60,10 @@ class Spaceship extends GameObject {
       GameObject obj = myObjects.get(i);
       if (obj instanceof DiscyBullet || obj instanceof Asteroid) {
         if (dist(obj.loc.x,obj.loc.y,loc.x,loc.y) < 10 + obj.size/2) {
-          lives--;
+          if (lifeTimer <= 0) {
+            lives--;
+            lifeTimer = 60;
+          }
           obj.lives = 0;
           loc.x = width/2;
           loc.y = height/2;
@@ -64,8 +75,8 @@ class Spaceship extends GameObject {
   void show() {
 
     pushMatrix();
-    stroke(255);
-    fill(0);
+    stroke(255,alpha);
+    fill(0,alpha);
     translate(loc.x,loc.y);
     rotate(dir.heading());
     quad(0,0,-25,-25,25,0,-25,25);
